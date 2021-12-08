@@ -1,0 +1,54 @@
+type = menu
+
+customization-meta {
+  identifier = net.minecraft.class_442
+  randomgroup = 1
+  renderorder = foreground
+  randommode = false
+  randomonlyfirsttime = false
+}
+
+customization {
+  path = config/bg.jpg
+  action = texturizebackground
+}
+
+customization {
+  keepaspectratio = false
+  action = backgroundoptions
+}
+
+customization {
+  orientation = top-left
+  shadow = true
+  delayappearanceseconds = 1.0
+  scale = 1.0
+  fadein = true
+  fadeinspeed = 1.0
+  x = 3
+  actionid = edc21523-1dc4-483f-a567-36a1a1f248271617580582077
+  action = addtext
+  y = 3
+  delayappearance = true
+  alignment = left
+  value = InterClient on %mcversion%
+  delayappearanceeverytime = false
+}
+
+customization {
+  orientation = top-left
+  shadow = false
+  delayappearanceseconds = 1.0
+  scale = 1.0
+  fadein = true
+  fadeinspeed = 1.0
+  x = 3
+  actionid = 0a57f96c-91c6-434b-8b34-74042f8d9cde1617580691485
+  action = addtext
+  y = 14
+  delayappearance = true
+  alignment = left
+  value = by Agent256 
+  delayappearanceeverytime = false
+}
+
