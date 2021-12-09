@@ -6,6 +6,8 @@ import argparse
 # import wget
 import PySimpleGUI as sg
 
+# pyinstaller --onefile --noconsole --icon=Icon32.ico --add-data "resources;resources" interclient.py
+
 # Variables
 version = '1.0'
 mcversion = '1.18'
@@ -24,6 +26,7 @@ args = parser.parse_args()
 # Set variables based on args
 use_optifine = args.optifine
 use_iris = args.iris
+
 
 # Helper Methods
 def get_full_path(relpath):
@@ -105,6 +108,22 @@ else:
         exit_popup()
     else:
         message_log('Directory confirmed by user')
+
+        # Prompts user for graphics Version
+        event, values = sg.Window('Confirm Install Directory', [[sg.T(f'Please select which graphics mod to install\nIris is recommended!')], [sg.B('Sodium'), sg.B('Iris'), sg.B('Optifine')]], disable_close=True).read(close=True)
+    if event == 'Optifine':
+        use_iris = False;
+        use_optifine = True
+
+    if event == 'Iris':
+        use_iris = True;
+        use_optifine = False
+    else:
+        message_log('Graphics Mod confirmed by user')
+
+ 
+
+    
 
 # Validates and copies files
 commonpath = get_full_path(os.path.join('resources', 'common'))
