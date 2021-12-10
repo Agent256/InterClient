@@ -3,7 +3,8 @@ import sys
 import os
 import shutil
 import argparse
-# import wget
+import urllib
+import pypresence
 import PySimpleGUI as sg
 
 # pyinstaller --onefile --noconsole --icon=Icon32.ico --add-data "resources;resources" interclient.py
@@ -126,7 +127,8 @@ else:
     
 
 # Validates and copies files
-commonpath = get_full_path(os.path.join('resources', 'common'))
+# commonpath = get_full_path(os.path.join('resources', 'common'))
+commonpath = True #make this into an ftp on replit
 copydir(commonpath, destpath)
 if(use_optifine):
     optifinepath = get_full_path(os.path.join('resources', 'optifine'))
