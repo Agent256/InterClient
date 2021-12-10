@@ -4,8 +4,7 @@ import os
 import shutil
 import argparse
 import urllib
-import time
-import pypresence as Presence
+import pypresence
 import PySimpleGUI as sg
 
 # pyinstaller --onefile --noconsole --icon=Icon32.ico --add-data "resources;resources" interclient.py
@@ -15,11 +14,6 @@ version = '1.0'
 mcversion = '1.18'
 sg.theme('LightBlue2')
 
-client_id = '64567352374564'  # Fake ID, put your real one here
-RPC = Presence(client_id)  # Initialize the client class
-RPC.connect() # Start the handshake loop
-
-print(RPC.update(details="Initializing ICI"))  # Set the presence
 
 # Argparse magic
 parser = argparse.ArgumentParser()
@@ -83,7 +77,7 @@ def file_log(text):
 def custom_log(type, message):
     print(f'[{type}]\t{message}')
 
-print(RPC.update(details="Inputting their path"))  # Set the presence
+
 
 if args.directory:
     destpath = args.directory
@@ -110,7 +104,6 @@ else:
     message_log(f'\"{destpath}\" is a valid directory')
 
     # Prompts user to confirm install directory
-    print(RPC.update(details="Confirming their selection"))  # Set the presence
     event, values = sg.Window('Confirm Install Directory', [[sg.T(f'Are you sure you want to install InterClient to \"{destpath}\"?')], [sg.B('Yes'), sg.B('No')]], disable_close=True).read(close=True)
     if event == sg.WIN_CLOSED or event == 'No':
         exit_popup()
@@ -118,8 +111,7 @@ else:
         message_log('Directory confirmed by user')
 
         # Prompts user for graphics Version
-        print(RPC.update(details="Selecting graphics mods"))  # Set the presence
-        event, values = sg.Window('Select graphics mods', [[sg.T(f'Please select which graphics mod to install\nIris is recommended!')], [sg.B('Sodium'), sg.B('Iris'), sg.B('Optifine')]], disable_close=True).read(close=True)
+        event, values = sg.Window('Confirm Install Directory', [[sg.T(f'Please select which graphics mod to install\nIris is recommended!')], [sg.B('Sodium'), sg.B('Iris'), sg.B('Optifine')]], disable_close=True).read(close=True)
     if event == 'Optifine':
         use_iris = False;
         use_optifine = True
@@ -149,6 +141,5 @@ else:
     copydir(sodiumpath, destpath)
 
 # Success Message
-print(RPC.update(details="Installation completed!"))  # Set the presence
 message_log('Install Completed')
 sg.Window('Installation Completed', [[sg.T('Thank you for installing InterClient!')], [sg.Exit()]], disable_close=True).read(close=True)
