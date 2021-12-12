@@ -127,8 +127,7 @@ else:
     
 
 # Validates and copies files
-# commonpath = get_full_path(os.path.join('resources', 'common'))
-commonpath = True #make this into an ftp on replit
+commonpath = get_full_path(os.path.join('resources', 'common'))
 copydir(commonpath, destpath)
 if(use_optifine):
     optifinepath = get_full_path(os.path.join('resources', 'optifine'))
