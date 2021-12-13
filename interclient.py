@@ -1,24 +1,52 @@
 # Imports
-import sys
+import argparse
+import json
 import os
 import shutil
-import argparse
+import sys
+import tempfile
 import urllib
 import urllib.request
-import pypresence
-import tempfile
 import zipfile
-import json
+import pypresence
 import PySimpleGUI as sg
+import requests
+import http.client as httplib
+
+sg.theme('LightBlue2')
 
 # pyinstaller --onefile --noconsole --icon=Icon32.ico interclient.py
+
+def have_internet():
+    conn = httplib.HTTPSConnection("8.8.8.8", timeout=5)
+    try:
+        conn.request("HEAD", "/")
+        return True
+    except Exception:
+        return False
+    finally:
+        conn.close()
+
+inter = have_internet()
+
+if inter:
+        print('Connected to Internet')
+else:
+        sg.Window('Error!', [[sg.T('You are not connected to the Internet')], [sg.Exit()]], disable_close=True).read(close=True)
+
+
+urllib.request.urlretrieve ("https://home.notjosh256.repl.co/version.json", "version.json")
+with open("version.json") as file:
+	data = json.load(file)
+
+ver = data['version']
+mcver = data['mcversion']
 
 
 
 # Variables
-version = '1.0'
-mcversion = '1.18'
-sg.theme('LightBlue2')
+version = ver
+mcversion = mcver
 
 tempdir = tempfile.TemporaryDirectory()
 print(tempdir.name)
