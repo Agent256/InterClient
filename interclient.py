@@ -4,16 +4,32 @@ import os
 import shutil
 import argparse
 import urllib
+import urllib.request
 import pypresence
+import tempfile
+import threading
+from time import sleep
+import zipfile
+from random import randint
 import PySimpleGUI as sg
 
-# pyinstaller --onefile --noconsole --icon=Icon32.ico --add-data "resources;resources" interclient.py
+# pyinstaller --onefile --noconsole --icon=Icon32.ico interclient.py
 
 # Variables
 version = '1.0'
 mcversion = '1.18'
 sg.theme('LightBlue2')
 
+tempdir = tempfile.TemporaryDirectory()
+print(tempdir.name)
+temppath = tempdir.name
+
+urllib.request.urlretrieve ("https://home.notjosh256.repl.co/resources.zip", "resources.zip")
+
+with zipfile.ZipFile("resources.zip","r") as zip_ref:
+    zip_ref.extractall(temppath)
+
+tempmsg = "Your tempdir is {}".format(temppath)
 
 # Argparse magic
 parser = argparse.ArgumentParser()
@@ -27,6 +43,7 @@ args = parser.parse_args()
 # Set variables based on args
 use_optifine = args.optifine
 use_iris = args.iris
+
 
 
 # Helper Methods
@@ -59,10 +76,12 @@ def copydir(sourcedir, destdir):
 def error_popup(error):
     error_log(error)
     sg.Window('Error!', [[sg.T(error)], [sg.Exit()]], disable_close=True).read(close=True)
+    shutil.rmtree(temppath)
     sys.exit()
 
 def exit_popup():
     sg.Window('Installer Exited', [[sg.T('The installer has been exited and no changes have been made.')], [sg.Exit()]], disable_close=True).read(close=True)
+    shutil.rmtree(temppath)
     sys.exit()
 
 def message_log(message):
@@ -85,9 +104,11 @@ else:
     event, values = sg.Window(f'InterClient Installer v{version}', [[sg.T(f'Welcome to the InterClient Installer for {mcversion}!\nPlease read the instructions on the website before installing.')],
                                                                     [sg.T('While unlikely, this program has the chance of screwing up your system if used incorrectly.\nI AM NOT RESPONSIBLE FOR ANY DATA LOSS INCURRED BY USING THIS SCRIPT.\nFor best results, use this on a fresh minecraft profile, and Fabric MUST be installed.')],
                                                                     [sg.T('Installer made with <3 by Josh/Agent256')],
+                                                                    [sg.T(tempmsg)],
                                                                     [sg.Frame('Install Directory', layout=[[sg.InputText(key='inputpath', expand_x=True), sg.FolderBrowse(key='browsepath')]], tooltip='The director for InterClient to be installed', expand_x=True)],
                                                                     [sg.B('Continue'), sg.B('Exit')]]).read(close=True)
     if event == sg.WIN_CLOSED or event == 'Exit':
+        shutil.rmtree(temppath)
         sys.exit(0)
     elif event == 'Continue':
         if values['inputpath']:
@@ -106,6 +127,7 @@ else:
     # Prompts user to confirm install directory
     event, values = sg.Window('Confirm Install Directory', [[sg.T(f'Are you sure you want to install InterClient to \"{destpath}\"?')], [sg.B('Yes'), sg.B('No')]], disable_close=True).read(close=True)
     if event == sg.WIN_CLOSED or event == 'No':
+        shutil.rmtree(temppath)
         exit_popup()
     else:
         message_log('Directory confirmed by user')
@@ -124,21 +146,25 @@ else:
 
  
 
-    
 
 # Validates and copies files
-commonpath = get_full_path(os.path.join('resources', 'common'))
+commonpath = temppath + '/resources/common'
+# commonpath = get_full_path(os.path.join('resources', 'common'))
 copydir(commonpath, destpath)
 if(use_optifine):
-    optifinepath = get_full_path(os.path.join('resources', 'optifine'))
+    optifinepath = temppath + '/resources/optifine'
+    # optifinepath = get_full_path(os.path.join('resources', 'optifine'))
     copydir(optifinepath, destpath)
 elif(use_iris):
-    irispath = get_full_path(os.path.join('resources', 'iris'))
+    irispath = temppath + '/resources/iris'
+    # irispath = get_full_path(os.path.join('resources', 'iris'))
     copydir(irispath, destpath)
 else:
-    sodiumpath = get_full_path(os.path.join('resources', 'sodium'))
+    sodiumpath = temppath + '/resources/sodium'
+    # sodiumpath = get_full_path(os.path.join('resources', 'sodium'))
     copydir(sodiumpath, destpath)
 
 # Success Message
+shutil.rmtree(temppath)
 message_log('Install Completed')
 sg.Window('Installation Completed', [[sg.T('Thank you for installing InterClient!')], [sg.Exit()]], disable_close=True).read(close=True)
