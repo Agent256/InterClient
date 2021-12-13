@@ -7,13 +7,13 @@ import urllib
 import urllib.request
 import pypresence
 import tempfile
-import threading
-from time import sleep
 import zipfile
-from random import randint
+import json
 import PySimpleGUI as sg
 
 # pyinstaller --onefile --noconsole --icon=Icon32.ico interclient.py
+
+
 
 # Variables
 version = '1.0'
